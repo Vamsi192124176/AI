@@ -1,0 +1,26 @@
+def solve(self, i):
+
+    if i == len(self.vars):
+        return True
+
+    # discussion on why we keep track of old domain is in comments
+    old = {var: set(self.domains[var]) for var in self.vars} 
+    var = self.vars[i]
+    print 'domain for '  + var + ': ' + str(self.domains[var])
+    if self.map[var].color != None:
+        return self.solve(i + 1)
+
+    for color in self.domains[var]:
+
+        if self.is_valid(var, color):
+
+            self.set_map(var, color)
+            self.remove_from_domains(var, color)
+
+            if self.solve(i + 1):
+                return True
+
+            self.set_map(var, None)
+            self.domains = old
+
+    return False
